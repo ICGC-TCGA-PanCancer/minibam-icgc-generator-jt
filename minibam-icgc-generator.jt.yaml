@@ -1,0 +1,190 @@
+workflow:
+  name:  minibam-icgc-generator
+  version: "0.0.1"
+  source_code: "https://github.com/ICGC-TCGA-PanCancer/minibam-icgc-generator-jt"
+
+  runtime:
+    docker: null
+
+  execution:
+    constraint: same_worker  # other values: 'shared_fs' (not supported yet), 'same_host'
+    memory: 4g
+    cpu: 2
+
+  input:
+    aliquot_id:
+      type: string
+    indel_padding:
+      type: integer
+    snv_padding:
+      type: integer
+    sv_padding:
+      type: integer
+    donor:
+      type: object
+      properties:
+        id:
+          type: string
+        gender:
+          type: string
+    normal_bam:
+      type: object
+      properties:
+        object_id:
+          type: string
+        file_name:
+          type: string
+        file_md5sum:
+          type: string
+        file_size:
+          type: integer
+        minibam_name:
+          type: string
+    tumor_bams:
+      type: array
+      items:
+        type: object
+        properties:
+          object_id:
+            type: string
+          file_name:
+            type: string
+          file_md5sum:
+            type: string
+          file_size:
+            type: integer
+          oxog_score:
+            type: float
+          specimen:
+            type: object
+            properties:
+              submitter_id:
+                type: string
+              type:
+                type: string
+    associated_vcfs:
+      type: array
+      items:
+        type: object
+        properties:
+          object_id:
+            type: string
+          file_name:
+            type: string
+          file_md5sum:
+            type: string
+          file_size:
+            type: integer
+
+  output: null  # we may not need this, does the workflow as a whole need some sort of output? or output from individual tasks is just fine
+
+  tasks:
+    download_normal_bam:
+      tool: download
+      input:
+        object_id: normal_bam.object_id
+        file_name: normal_bam.file_name
+        file_md5sum: normal_bam.file_md5sum
+      depends_on: null
+
+    parallel_download_vcf_files:
+      scatter:
+        input:
+          vcf_file:
+            with_items: associated_vcfs
+            task_suffix: associated_vcf.associated_vcf_id
+      tasks:
+        download:
+          tool: download
+          input:
+            object_id: vcf_file.object_id
+            file_name: vcf_file.file_name
+            file_md5sum: vcf_file.file_md5sum
+          depends_on: null
+
+    parallel_download_tumour_bams:
+      scatter:
+        input:
+          tumour_bam:
+            with_items: tumour_bams
+            task_suffix: tumour_bam.tumour_bam_id
+      tasks:
+        download:
+          tool: download
+          input:
+            object_id: tumour_bam.object_id
+            file_name: tumour_bam.file_name
+            file_md5sum: tumour_bam.file_md5sum
+          depends_on: null
+
+        generate_minibam:
+          tool: generate_minibam
+          input:
+            normal_bam: file@download
+            tumour_bam: tumour_bam.file@download
+            oxog_score: tumour_bam.oxog_score
+            snv_padding: snv_padding
+            sv_padding: sv_padding
+            indel_padding: indel_padding
+          depends_on:
+          - completed@download
+
+        upload_minibam:
+          tool: upload
+          input:
+            file_name: file@generate_minibam
+            donor_gender: donor.gender
+            donor_submitter_id: donor.submitter_id
+            sample_submitter_id: tumour_bam.specimen.submitter_id
+            sample_submitter_type: tumour_bam.specimen.type
+
+# A workflow is made up with one or more tools
+# Each tool can have its own docker imagine if desirable
+tools:
+  download:  # make a new XML cancatenate original EGA XMLs: study, sample, analysis/(experiment and run)
+    command: download.py
+    input:
+      object_id:
+        type: string
+      file_name:
+        type: string
+      file_md5sum:
+        type: string
+    output:
+      file:
+        type: string
+        is_file: true
+
+  generate_minibam:
+    command: generate_minibam.py
+    input:
+      normal_bam:
+        type: string
+      tumour_bam:
+        type: string
+      oxog_score:
+        type: float
+      snv_padding:
+        type: integer
+      snv_padding:
+        type: integer
+      indel_padding:
+        type: integer
+    output:
+      file:  # new field
+        type: string
+        is_file: true
+
+  upload_minibam:
+    command: generate_minibam
+    input:
+      file_name:
+        type: string
+      donor_gender:
+        type: string
+      donor_submitter_id:
+        type: string
+      sample_submitter_id:
+        type: string
+      sample_submitter_type:
+        type: string
