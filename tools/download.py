@@ -19,7 +19,7 @@ def download_file(object_id, out_dir, file_name):
     subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',out_dir+':/app',docker_container,'icgc-storage-client','--profile',download_source,'download',
                              '--object-id',object_id,'--output-dir','/app','--force'])
 
-    if not os.path.isfile(os.path.join(out_dir+file_name)):
+    if not os.path.isfile(os.path.join(out_dir,file_name)):
         raise ValueError('Object ID: '+object_id+' could not be downloaded. Try to download with icgc-storage-client for more info.')
 
 

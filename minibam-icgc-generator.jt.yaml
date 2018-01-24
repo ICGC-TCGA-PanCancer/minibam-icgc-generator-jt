@@ -45,8 +45,13 @@ workflow:
           type: string
         file_size:
           type: integer
-        minibam_name:
-          type: string
+        minibam:
+          type: object
+          properties:
+            bam_file_name:
+              type: string
+            bai_file_name:
+              type: string
     tumor_bams:
       type: array
       items:
@@ -114,13 +119,15 @@ workflow:
     #  depends_on:
     #  - completed@download
 
-    #upload_minibams:
-    #  tool: upload
-    #  input:
-    #    normal_bam: normal_bam
-    #    tumour_bams: tumour_bams
-    #  depends_on:
-    #  - completed@generate_minibam
+    upload_minibams:
+      tool: upload_minibams
+      input:
+        input_directory: output_directory@generate_minibam
+        library_strategy: experiment.library_strategy
+        normal_bam: normal_bam
+        tumour_bams: tumour_bams
+      depends_on:
+      - completed@generate_minibam
 
 # A workflow is made up with one or more tools
 # Each tool can have its own docker imagine if desirable
@@ -156,10 +163,10 @@ tools:
       indel_padding:
         type: integer
     output:
-      minibams:  # new field
-        type: array
+      output_directory:  # new field
+        type: string
 
-  upload_minibam:
+  upload_minibams:
     command: generate_minibam
     input:
       file_name:
@@ -172,3 +179,9 @@ tools:
         type: string
       sample_submitter_type:
         type: string
+      library_strategy:
+        type: string
+      normal_bam:
+        type: string
+      tumour_bams:
+        type: array
