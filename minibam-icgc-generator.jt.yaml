@@ -64,11 +64,11 @@ workflow:
             type: float
           minibam:
             type: object
-              properties:
-                bam_file_name:
-                  type: string
-                bai_file_name:
-                  type: string
+            properties:
+              bam_file_name:
+                type: string
+              bai_file_name:
+                type: string
           specimen:
             type: object
             properties:
@@ -101,26 +101,26 @@ workflow:
         vcf_files: associated_vcfs
       depends_on: null
 
-    generate_minibam:
-      tool: generate_minibam
-      input:
-        input_directory: directory@download
-        normal_bam: normal_bam
-        tumour_bams: tumour_bams
-        vcf_files: associated_vcfs
-        sv_padding: sv_padding
-        snv_padding: snv_padding
-        indel_padding: indel_padding
-      depends_on:
-      - completed@download
+    #generate_minibam:
+    #  tool: generate_minibam
+    #  input:
+    #    input_directory: directory@download
+    #    normal_bam: normal_bam
+    #    tumour_bams: tumour_bams
+    #    vcf_files: associated_vcfs
+    #    sv_padding: sv_padding
+    #    snv_padding: snv_padding
+    #    indel_padding: indel_padding
+    #  depends_on:
+    #  - completed@download
 
-    upload_minibams:
-      tool: upload
-      input:
-        normal_bam: normal_bam
-        tumour_bams: tumour_bams
-      depends_on:
-      - completed@generate_minibam
+    #upload_minibams:
+    #  tool: upload
+    #  input:
+    #    normal_bam: normal_bam
+    #    tumour_bams: tumour_bams
+    #  depends_on:
+    #  - completed@generate_minibam
 
 # A workflow is made up with one or more tools
 # Each tool can have its own docker imagine if desirable
