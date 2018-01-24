@@ -1,6 +1,7 @@
+#!/usr/bin/env python
+
 import subprocess
 import os
-import shutil
 from utils import get_task_dict, save_output_json
 import sys
 
@@ -20,8 +21,6 @@ def download_file(object_id, out_dir, file_name):
 
     if not os.path.isfile(os.path.join(out_dir+file_name)):
         raise ValueError('Object ID: '+object_id+' could not be downloaded. Try to download with icgc-storage-client for more info.')
-
-
 
 
 # Download normal bam file
