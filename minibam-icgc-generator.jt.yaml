@@ -20,12 +20,19 @@ workflow:
       type: integer
     sv_padding:
       type: integer
+    sample_submitter_id:
+      type: string
     donor:
       type: object
       properties:
         id:
           type: string
         gender:
+          type: string
+    experiment:
+      type: object
+      properties:
+        library_strategy:
           type: string
     normal_bam:
       type: object
@@ -55,6 +62,13 @@ workflow:
             type: integer
           oxog_score:
             type: float
+          minibam:
+            type: object
+              properties:
+                bam_file_name:
+                  type: string
+                bai_file_name:
+                  type: string
           specimen:
             type: object
             properties:
@@ -79,64 +93,34 @@ workflow:
   output: null  # we may not need this, does the workflow as a whole need some sort of output? or output from individual tasks is just fine
 
   tasks:
-    download_normal_bam:
+    download:
       tool: download
       input:
-        object_id: normal_bam.object_id
-        file_name: normal_bam.file_name
-        file_md5sum: normal_bam.file_md5sum
+        normal_bam: normal_bam
+        tumour_bams: tumour_bams
+        vcf_files: associated_vcfs
       depends_on: null
 
-    parallel_download_vcf_files:
-      scatter:
-        input:
-          vcf_file:
-            with_items: associated_vcfs
-            task_suffix: associated_vcf.associated_vcf_id
-      tasks:
-        download:
-          tool: download
-          input:
-            object_id: vcf_file.object_id
-            file_name: vcf_file.file_name
-            file_md5sum: vcf_file.file_md5sum
-          depends_on: null
+    generate_minibam:
+      tool: generate_minibam
+      input:
+        input_directory: directory@download
+        normal_bam: normal_bam
+        tumour_bams: tumour_bams
+        vcf_files: associated_vcfs
+        sv_padding: sv_padding
+        snv_padding: snv_padding
+        indel_padding: indel_padding
+      depends_on:
+      - completed@download
 
-    parallel_download_tumour_bams:
-      scatter:
-        input:
-          tumour_bam:
-            with_items: tumour_bams
-            task_suffix: tumour_bam.tumour_bam_id
-      tasks:
-        download:
-          tool: download
-          input:
-            object_id: tumour_bam.object_id
-            file_name: tumour_bam.file_name
-            file_md5sum: tumour_bam.file_md5sum
-          depends_on: null
-
-        generate_minibam:
-          tool: generate_minibam
-          input:
-            normal_bam: file@download
-            tumour_bam: tumour_bam.file@download
-            oxog_score: tumour_bam.oxog_score
-            snv_padding: snv_padding
-            sv_padding: sv_padding
-            indel_padding: indel_padding
-          depends_on:
-          - completed@download
-
-        upload_minibam:
-          tool: upload
-          input:
-            file_name: file@generate_minibam
-            donor_gender: donor.gender
-            donor_submitter_id: donor.submitter_id
-            sample_submitter_id: tumour_bam.specimen.submitter_id
-            sample_submitter_type: tumour_bam.specimen.type
+    upload_minibams:
+      tool: upload
+      input:
+        normal_bam: normal_bam
+        tumour_bams: tumour_bams
+      depends_on:
+      - completed@generate_minibam
 
 # A workflow is made up with one or more tools
 # Each tool can have its own docker imagine if desirable
@@ -144,26 +128,27 @@ tools:
   download:  # make a new XML cancatenate original EGA XMLs: study, sample, analysis/(experiment and run)
     command: download.py
     input:
-      object_id:
-        type: string
-      file_name:
-        type: string
-      file_md5sum:
-        type: string
+      normal_bam:
+        type: object
+      tumour_bams:
+        type: array
+      vcf_files:
+        type: array
     output:
-      file:
+      directory:
         type: string
-        is_file: true
 
   generate_minibam:
     command: generate_minibam.py
     input:
+      input_directory:
+        type: string
       normal_bam:
-        type: string
-      tumour_bam:
-        type: string
-      oxog_score:
-        type: float
+        type: object
+      tumour_bams:
+        type: array
+      vcf_files:
+        type: array
       snv_padding:
         type: integer
       snv_padding:
@@ -171,9 +156,8 @@ tools:
       indel_padding:
         type: integer
     output:
-      file:  # new field
-        type: string
-        is_file: true
+      minibams:  # new field
+        type: array
 
   upload_minibam:
     command: generate_minibam

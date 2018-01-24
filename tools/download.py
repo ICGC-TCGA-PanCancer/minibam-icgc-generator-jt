@@ -7,20 +7,41 @@ import sys
 task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
 
-docker_container = "quay.io/baminou/minibam-collab-dckr:latest"
-download_source = "collab"
-object_id = task_dict.get('input').get('object_id')
-file_name = task_dict.get('input').get('file_name')
 
 
-subprocess.check_output(['docker','pull',docker_container])
-subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',cwd+':/app',docker_container,'icgc-storage-client','--profile',download_source,'download',
-                         '--object-id',object_id,'--output-dir','/app','--force'])
+def download_file(object_id, out_dir, file_name):
+    docker_container = "quay.io/baminou/minibam-collab-dckr:latest"
+    download_source = "collab"
 
-if not os.path.isfile(os.path.join(cwd+file_name)):
-    print('Object ID: '+object_id+' could not be downloaded. Try to download with icgc-storage-client for more info.')
-    exit(1)
+    subprocess.check_output(['docker', 'pull', docker_container])
+
+    subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',out_dir+':/app',docker_container,'icgc-storage-client','--profile',download_source,'download',
+                             '--object-id',object_id,'--output-dir','/app','--force'])
+
+    if not os.path.isfile(os.path.join(out_dir+file_name)):
+        raise ValueError('Object ID: '+object_id+' could not be downloaded. Try to download with icgc-storage-client for more info.')
+
+
+
+
+# Download normal bam file
+object_id = task_dict.get('input').get('normal_bam').get('object_id')
+file_name = task_dict.get('input').get('normal_bam').get('file_name')
+download_file(object_id, cwd, file_name)
+
+# Download tumour bam files
+for i in range(0,len(task_dict.get('input').get('tumour_bams'))):
+    object_id = task_dict.get('input').get('tumour_bams')[i].get('object_id')
+    file_name = task_dict.get('input').get('tumour_bams')[i].get('file_name')
+    download_file(object_id, cwd, file_name)
+
+# Download VCF files
+for _file in range(0,len(task_dict.get('input').get('vcf_files'))):
+    object_id = task_dict.get('input').get('vcf_files')[i].get('object_id')
+    file_name = task_dict.get('input').get('vcf_files')[i].get('file_name')
+    download_file(object_id, cwd, file_name)
+
 
 save_output_json({
-    'file': os.path.join(cwd, file_name)
+    'directory': cwd
 })
