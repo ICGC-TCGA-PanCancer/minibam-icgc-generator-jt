@@ -49,4 +49,4 @@ json_file = 'run.json'
 with open(json_file, 'w') as f:
     json.dump(json_input, f, indent=4, sort_keys=True)
 
-subprocess.check_output(['cwltool','--debug','--relax-path-checks','--non-strict','https://dockstore.org:8443/api/ga4gh/v1/tools/%23workflow%2FICGC-TCGA-PanCancer%2Fpcawg-minibam/versions/1.0.0/plain-CWL/descriptor',json_file])
+subprocess.check_output(['cwltool','--debug','--relax-path-checks','--non-strict','pcawg-minibam/pcawg_minibam_wf.cwl',json_file])
