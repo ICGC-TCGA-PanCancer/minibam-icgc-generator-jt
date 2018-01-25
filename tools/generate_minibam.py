@@ -15,8 +15,7 @@ json_input['refFile']                           = {}
 json_input['refFile']['path']                   = '/refdata/Homo_sapiens_assembly19.fasta'
 json_input['refFile']['class']                  = 'File'
 
-with open('test.txt', 'w') as f:
-    json.dump(task_dict.get('input'), f, indent=4, sort_keys=True)
+save_output_json(task_dict.get('input'))
 
 json_input['normalBam'] = {}
 json_input['normalBam']['path']                 = os.path.join(task_dict.get('input').get('input_directory'),task_dict.get('normal_bam').get('file_name'))
