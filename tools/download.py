@@ -35,7 +35,7 @@ def download_file(object_id, out_dir, file_name):
 #    download_file(object_id, cwd, file_name)
 
 # Download VCF files
-for _file in range(len(task_dict.get('input').get('vcf_files'))):
+for i in range(0,len(task_dict.get('input').get('vcf_files'))):
     object_id = task_dict.get('input').get('vcf_files')[i].get('object_id')
     file_name = task_dict.get('input').get('vcf_files')[i].get('file_name')
     download_file(object_id, cwd, file_name)
