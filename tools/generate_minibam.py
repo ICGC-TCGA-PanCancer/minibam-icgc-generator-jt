@@ -21,17 +21,10 @@ json_input['normalBam']['class']                = 'File'
 
 json_input['out_dir']                           = "/var/spool/cwl"
 
-json_input['minibamName']                       = "minibam.bam"
-
 json_input['inputFileDirectory']                = {}
 json_input['inputFileDirectory']['class']       = "Directory"
 json_input['inputFileDirectory']['path']        = task_dict.get('input').get('input_directory')
 json_input['inputFileDirectory']['location']    = task_dict.get('input').get('input_directory')
-
-json_input['refDataDir']                        = {}
-json_input['refDataDir']['class']               = 'Directory'
-json_input['refDataDir']['path']                = '/datastore/oxog_refdata'
-json_input['refDataDir']['location']            = '/datastore/oxog_refdata'
 
 json_input['snv-padding']                       = str(task_dict.get('input').get('snv_padding'))
 json_input['sv-padding']                        = str(task_dict.get('input').get('sv_padding'))
@@ -45,7 +38,7 @@ for i in range(0,len(task_dict.get('input').get('tumour_bams'))):
     tmp_json['oxoQScore'] = task_dict.get('input').get('tumour_bams')[i].get('oxog_score')
     tmp_json['associatedVcfs'] = []
     for j in range(0,len(task_dict.get('input').get('vcf_files'))):
-        tmp_json['associatedVcfs'].append(task_dict.get('input').get('vcf_files')[i])
+        tmp_json['associatedVcfs'].append(task_dict.get('input').get('vcf_files')[i].get('file_name'))
     json_input['tumours'].append(tmp_json)
 
 json_file = 'run.json'
