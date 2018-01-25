@@ -9,14 +9,10 @@ import sys
 task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
 
-
-docker_container = "quay.io/baminou/minibam-collab-dckr:latest"
-
-
 json_input = {}
 
 json_input['refFile']                           = {}
-json_input['refFile']['path']                   = '/Homo_sapiens_assembly19.fasta'
+json_input['refFile']['path']                   = '/refdata/Homo_sapiens_assembly19.fasta'
 json_input['refFile']['class']                  = 'File'
 
 json_input['normalBam'] = {}
@@ -46,7 +42,11 @@ for i in range(0,len(task_dict.get('input').get('tumour_bams'))):
     tmp_json['associatedVcfs'] = []
     for j in range(0,len(task_dict.get('input').get('vcf_files'))):
         tmp_json['associatedVcfs'].append(task_dict.get('input').get('vcf_files')[i])
-    json_input.append(tmp_json)
+    json_input['tumours'].append(tmp_json)
 
+json_file = 'run.json'
 
-subprocess.check_output(['docker','pull',docker_container])
+with open(json_file, 'w') as f:
+    json.dump(json_input, f, indent=4, sort_keys=True)
+
+subprocess.check_output(['cwltool','--debug','--relax-path-checks','--non-strict','https://dockstore.org:8443/api/ga4gh/v1/tools/%23workflow%2FICGC-TCGA-PanCancer%2Fpcawg-minibam/versions/1.0.0/plain-CWL/descriptor',json_file])
