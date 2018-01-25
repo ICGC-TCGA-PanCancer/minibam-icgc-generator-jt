@@ -33,9 +33,9 @@ json_input['refDataDir']['class']               = 'Directory'
 json_input['refDataDir']['path']                = '/datastore/oxog_refdata'
 json_input['refDataDir']['location']            = '/datastore/oxog_refdata'
 
-json_input['snv-padding']                       = task_dict.get('input').get('snv_padding')
-json_input['sv-padding']                        = task_dict.get('input').get('sv_padding')
-json_input['indel-padding']                        = task_dict.get('input').get('indel_padding')
+json_input['snv-padding']                       = str(task_dict.get('input').get('snv_padding'))
+json_input['sv-padding']                        = str(task_dict.get('input').get('sv_padding'))
+json_input['indel-padding']                     = str(task_dict.get('input').get('indel_padding'))
 
 json_input['tumours'] = []
 for i in range(0,len(task_dict.get('input').get('tumour_bams'))):
