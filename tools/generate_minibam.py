@@ -15,10 +15,8 @@ json_input['refFile']                           = {}
 json_input['refFile']['path']                   = '/refdata/Homo_sapiens_assembly19.fasta'
 json_input['refFile']['class']                  = 'File'
 
-save_output_json(task_dict.get('input'))
-
 json_input['normalBam'] = {}
-json_input['normalBam']['path']                 = os.path.join(task_dict.get('input').get('input_directory'),task_dict.get('normal_bam').get('file_name'))
+json_input['normalBam']['path']                 = os.path.join(task_dict.get('input').get('input_directory'),task_dict.get('input').get('normal_bam').get('file_name'))
 json_input['normalBam']['class']                = 'File'
 
 json_input['out_dir']                           = "/var/spool/cwl"
