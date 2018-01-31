@@ -22,6 +22,10 @@ workflow:
       type: integer
     sample_submitter_id:
       type: string
+    experiment_library_strategy:
+      type: string
+    project_code:
+      type: string
     donor:
       type: object
       properties:
@@ -30,11 +34,6 @@ workflow:
         gender:
           type: string
         submitter_id:
-          type: string
-    experiment:
-      type: object
-      properties:
-        library_strategy:
           type: string
     normal_bam:
       type: object
@@ -132,11 +131,10 @@ workflow:
       tool: upload_minibams
       input:
         input_directory: output_directory@generate_minibam
-        library_strategy: experiment.library_strategy
+        donor_id: donor.id
+        experiment_library_strategy: experiment_library_strategy
         normal_bam: normal_bam
         tumour_bams: tumour_bams
-        donor: donor
-        sample_submitter_id: sample_submitter_id
       depends_on:
       - completed@generate_minibam
 
@@ -180,17 +178,11 @@ tools:
   upload_minibams:
     command: upload.py
     input:
-      file_name:
+      input_directory:
         type: string
-      donor:
-        type: object
-      donor_submitter_id:
+      donor_id:
         type: string
-      sample_submitter_id:
-        type: string
-      sample_submitter_type:
-        type: string
-      library_strategy:
+      experiment_library_strategy:
         type: string
       normal_bam:
         type: string

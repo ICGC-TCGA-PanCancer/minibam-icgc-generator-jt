@@ -47,3 +47,7 @@ with open(json_file, 'w') as f:
     json.dump(json_input, f, indent=4, sort_keys=True)
 
 subprocess.check_output(['cwltool','--debug','--relax-path-checks','--non-strict','/home/ubuntu/pcawg-minibam/pcawg_minibam_wf.cwl',json_file])
+
+save_output_json({
+    'out_dir': os.getcwd()
+})
