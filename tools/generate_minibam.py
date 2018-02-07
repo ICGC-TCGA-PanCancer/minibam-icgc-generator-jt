@@ -5,13 +5,10 @@ import json
 import subprocess
 from utils import get_task_dict, save_output_json
 import sys
-import time
 
 task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
-time.sleep(120)
 
-"""
 json_input = {}
 
 json_input['refFile']                           = {}
@@ -50,8 +47,7 @@ with open(json_file, 'w') as f:
     json.dump(json_input, f, indent=4, sort_keys=True)
 
 subprocess.check_output(['cwltool','--debug','--relax-path-checks','--non-strict','/home/ubuntu/pcawg-minibam/pcawg_minibam_wf.cwl',json_file])
-"""
 
 save_output_json({
-    'out_dir': cwd
+    'out_dir': os.getcwd()
 })
