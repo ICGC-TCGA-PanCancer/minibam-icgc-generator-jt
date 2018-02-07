@@ -7,6 +7,7 @@ from utils import get_task_dict, save_output_json, get_md5
 import sys
 import shutil
 
+
 task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
 
