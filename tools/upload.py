@@ -13,6 +13,7 @@ cwd = os.getcwd()
 
 
 payload_container = "quay.io/baminou/dckr_song_generate_payload"
+upload_container = "quay.io/baminou/dckr_song_upload"
 subprocess.check_output(['docker','pull',payload_container])
 
 input_directory = task_dict.get('input').get('input_directory')
@@ -22,10 +23,6 @@ normal_minibam_name = task_dict.get('input').get('normal_bam').get('minibam').ge
 normal_minibai_name = task_dict.get('input').get('normal_bam').get('minibam').get('bai_file_name')
 tumour_bams = task_dict.get('input').get('tumour_bams')
 study_id = task_dict.get('input').get('project_code')
-
-save_output_json({
-    'payload_json': task_dict.get('input')
-})
 
 song_server = 'http://142.1.177.168:8080'
 
@@ -38,21 +35,21 @@ subprocess.check_output(['docker','run','-v',input_directory+':/app',payload_con
 
 #shutil.move(os.path.join(input_directory,'payload.json'), os.path.join(cwd,'payload.json'))
 
-#subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',cwd+':/app',docker_container,'upload_with_song.py','-s',study_id,
-                         #'-u',song_server,'-p','payload.json','-o','/app/manifest.txt'])
+subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',input_directory+':/app',upload_container,'upload','-s',study_id,
+                         '-u',song_server,'-p','payload.json','-o','/app/manifest.txt','-j','/app/manifest.json'])
 
-#for tumour_bam in tumour_bams:
-#    subprocess.check_output(['docker','run','-v',input_directory+':/app',docker_container,'generate_song_payload.py','-d',donor_id,
-#                             '-st',"DNA",'-at','sequencingRead','-l',experiment_library_strategy,
-#                             '-o','/app/payload.json',
-#                             '--paired-end',
-#                             '-f','/app/'+tumour_bam.get('minibam').get('bam_file_name'),
-#                             '/app/'+tumour_bam.get('minibam').get('bam_file_name')])
+for tumour_bam in tumour_bams:
+    subprocess.check_output(['docker','run','-v',input_directory+':/app',payload_container,'generate_song_payload.py','-d',donor.get('id'),
+                             '-st',"DNA",'-at','sequencingRead','-l',experiment.get('library_strategy'),
+                             '-o','/app/payload.json',
+                             '--paired-end',
+                             '-f','/app/'+tumour_bam.get('minibam').get('bam_file_name'),
+                             '/app/'+tumour_bam.get('minibam').get('bam_file_name')])
 
 #shutil.move(os.path.join(input_directory,'payload.json'), os.path.join(cwd,'payload.json'))
 
-#subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',cwd+':/app',docker_container,'upload_with_song.py','-s',study_id,
-#                         '-u',song_server,'-p','payload.json','-o','/app/manifest.txt'])
+subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',cwd+':/app',upload_container,'upload','-s',study_id,
+                         '-u',song_server,'-p','payload.json','-o','/app/manifest2.txt','/app/manifest2.json'])
 
 
 
