@@ -33,7 +33,8 @@ subprocess.check_output(['docker','run','-v',input_directory+':/app',payload_con
                          '-st',"DNA",'-at','sequencingRead','-l',experiment_library_strategy,
                          '-o','/app/payload.json',
                          '--paired-end',
-                         '-f','/app/'+normal_minibam_name,'/app/'+normal_minibai_name])
+                         '-f','/app/'+normal_minibam_name,
+                         '/app/'+normal_minibai_name])
 
 #shutil.move(os.path.join(input_directory,'payload.json'), os.path.join(cwd,'payload.json'))
 
