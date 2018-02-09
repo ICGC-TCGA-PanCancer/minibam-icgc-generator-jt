@@ -132,7 +132,7 @@ workflow:
       input:
         input_directory: output_directory@generate_minibam
         donor: donor
-        experiment_library_strategy: experiment_library_strategy
+        experiment: experiment
         normal_bam: normal_bam
         tumour_bams: tumour_bams
       depends_on:
@@ -182,8 +182,8 @@ tools:
         type: string
       donor:
         type: object
-      experiment_library_strategy:
-        type: string
+      experiment:
+        type: object
       normal_bam:
         type: string
       tumour_bams:
