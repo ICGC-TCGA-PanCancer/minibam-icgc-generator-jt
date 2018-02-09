@@ -23,6 +23,10 @@ normal_minibai_name = task_dict.get('input').get('normal_bam').get('minibam').ge
 tumour_bams = task_dict.get('input').get('tumour_bams')
 study_id = task_dict.get('input').get('project_code')
 
+save_output_json({
+    'payload_json': task_dict.get('input')
+})
+
 song_server = 'http://142.1.177.168:8080'
 
 subprocess.check_output(['docker','run','-v',input_directory+':/app',payload_container,'generate','-d',donor_id,
