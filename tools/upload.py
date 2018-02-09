@@ -29,7 +29,7 @@ save_output_json({
 
 song_server = 'http://142.1.177.168:8080'
 
-subprocess.check_output(['docker','run','-v',input_directory+':/app',payload_container,'generate','-d',donor.id,
+subprocess.check_output(['docker','run','-v',input_directory+':/app',payload_container,'generate','-d',donor.get('id'),
                          '-st',"DNA",'-at','sequencingRead','-l',experiment_library_strategy,
                          '-o','/app/payload.json',
                          '--paired-end',
