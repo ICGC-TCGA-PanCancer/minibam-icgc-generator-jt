@@ -131,7 +131,7 @@ workflow:
       tool: upload_minibams
       input:
         input_directory: output_directory@generate_minibam
-        donor_id: donor.id
+        donor: donor
         experiment_library_strategy: experiment_library_strategy
         normal_bam: normal_bam
         tumour_bams: tumour_bams
@@ -172,7 +172,7 @@ tools:
       indel_padding:
         type: integer
     output:
-      output_directory:  # new field
+      output_directory:
         type: string
 
   upload_minibams:
@@ -180,8 +180,8 @@ tools:
     input:
       input_directory:
         type: string
-      donor_id:
-        type: string
+      donor:
+        type: object
       experiment_library_strategy:
         type: string
       normal_bam:

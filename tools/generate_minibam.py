@@ -7,7 +7,7 @@ from utils import get_task_dict, save_output_json
 import sys
 import time
 
-time.sleep(3*60)
+time.sleep(2*60)
 
 task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
@@ -52,5 +52,5 @@ with open(json_file, 'w') as f:
 #subprocess.check_output(['cwltool','--debug','--relax-path-checks','--non-strict','/home/ubuntu/pcawg-minibam/pcawg_minibam_wf.cwl',json_file])
 
 save_output_json({
-    'out_dir': os.getcwd()
+    'output_directory': os.getcwd()
 })

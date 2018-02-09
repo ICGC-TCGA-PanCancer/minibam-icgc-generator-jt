@@ -16,7 +16,7 @@ payload_container = "quay.io/baminou/dckr_song_generate_payload"
 subprocess.check_output(['docker','pull',payload_container])
 
 input_directory = task_dict.get('input').get('input_directory')
-donor_id = task_dict.get('input').get('donor_id')
+donor = task_dict.get('input').get('donor')
 experiment_library_strategy = task_dict.get('input').get('experiment_library_strategy')
 normal_minibam_name = task_dict.get('input').get('normal_bam').get('minibam').get('bam_file_name')
 normal_minibai_name = task_dict.get('input').get('normal_bam').get('minibam').get('bai_file_name')
@@ -29,7 +29,7 @@ save_output_json({
 
 song_server = 'http://142.1.177.168:8080'
 
-subprocess.check_output(['docker','run','-v',input_directory+':/app',payload_container,'generate','-d',donor_id,
+subprocess.check_output(['docker','run','-v',input_directory+':/app',payload_container,'generate','-d',donor.id,
                          '-st',"DNA",'-at','sequencingRead','-l',experiment_library_strategy,
                          '-o','/app/payload.json',
                          '--paired-end',
