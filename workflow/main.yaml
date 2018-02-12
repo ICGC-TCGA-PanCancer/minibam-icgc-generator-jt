@@ -106,7 +106,7 @@ workflow:
   output: null  # we may not need this, does the workflow as a whole need some sort of output? or output from individual tasks is just fine
 
   tasks:
-    download:
+    download_files:
       tool: download
       input:
         normal_bam: normal_bam
