@@ -117,7 +117,7 @@ workflow:
     generate_minibam:
       tool: generate_minibam
       input:
-        input_directory: directory@download
+        input_directory: directory@download_files
         normal_bam: normal_bam
         tumour_bams: tumour_bams
         vcf_files: associated_vcfs
@@ -125,18 +125,18 @@ workflow:
         snv_padding: snv_padding
         indel_padding: indel_padding
       depends_on:
-      - completed@download
+      - completed@download_files
 
     upload_minibams:
       tool: upload_minibams
       input:
-        input_directory: output_directory@generate_minibam
+        input_directory: output_directory@download_files
         donor: donor
         experiment: experiment
         normal_bam: normal_bam
         tumour_bams: tumour_bams
       depends_on:
-      - completed@generate_minibam
+      - completed@download_files
 
 # A workflow is made up with one or more tools
 # Each tool can have its own docker imagine if desirable
