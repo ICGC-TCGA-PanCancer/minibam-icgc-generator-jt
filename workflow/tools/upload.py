@@ -26,10 +26,14 @@ study_id = task_dict.get('input').get('project_code')
 
 song_server = 'http://142.1.177.168:8080'
 
+subprocess.check_output(['docker', 'pull', payload_container])
+subprocess.check_output(['docker', 'pull', upload_container])
+
 subprocess.check_output(['docker','run','-v',input_directory+':/app',payload_container,'generate','-d',donor.get('id'),
                          '-st',"DNA",'-at','sequencingRead','-l',experiment.get('library_strategy'),
                          '-o','/app/payload.json',
                          '--paired-end',
+                         '-ac', 'open',
                          '-f','/app/'+normal_minibam_name,
                          '/app/'+normal_minibai_name])
 
