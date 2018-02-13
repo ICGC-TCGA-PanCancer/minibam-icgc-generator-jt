@@ -171,7 +171,7 @@ workflow:
       - completed@download_files
 
     generate_song_payloads:
-      tool: generate_song_payload
+      tool: generate_song_payloads
       input:
         input_directory: directory@download_files
         normal_bam: normal_bam
