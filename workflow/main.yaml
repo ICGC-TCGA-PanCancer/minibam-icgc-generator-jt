@@ -12,8 +12,6 @@ workflow:
     cpu: 2
 
   input:
-    aliquot_id:
-      type: string
     indel_padding:
       type: integer
     snv_padding:
@@ -22,23 +20,32 @@ workflow:
       type: integer
     sample_submitter_id:
       type: string
-    experiment_library_strategy:
+    sample_type:
       type: string
-    project_code:
-      type: string
-    donor:
+    analysis:
       type: object
       properties:
         id:
           type: string
-        gender:
+        type:
           type: string
-        submitter_id:
+    project_code:
+      type: string
+    experiment:
+      type: object
+      properties:
+        aligned:
+          type: boolean
+        library_strategy:
+          type: string
+        reference_genome:
           type: string
     normal_bam:
       type: object
       properties:
         object_id:
+          type: string
+        aliquot_id:
           type: string
         file_name:
           type: string
@@ -46,20 +53,38 @@ workflow:
           type: string
         file_size:
           type: integer
-        specimen:
-          type: object
-          properties:
-            submitter_id:
-              type: string
-            type:
-              type: string
         minibam:
           type: object
           properties:
+            access:
+              type: string
             bam_file_name:
               type: string
             bai_file_name:
               type: string
+        sample:
+          type: object
+          properties:
+            donor:
+              type: object
+              properties:
+                gender:
+                  type: string
+                submitter_id:
+                  type: string
+            submitter_id:
+              type: string
+            sample_type:
+              type: string
+            specimen:
+              type: object
+              properties:
+                class:
+                  type: string
+                submitter_id:
+                  type: string
+                specimen_type:
+                  type: string
     tumour_bams:
       type: array
       items:
@@ -73,6 +98,8 @@ workflow:
             type: string
           file_size:
             type: integer
+          aliquot_id:
+            type: string
           oxog_score:
             type: float
           minibam:
@@ -82,13 +109,29 @@ workflow:
                 type: string
               bai_file_name:
                 type: string
-          specimen:
+          sample:
             type: object
             properties:
+              donor:
+                type: object
+                properties:
+                  gender:
+                    type: string
+                  submitter_id:
+                    type: string
               submitter_id:
                 type: string
-              type:
+              sample_type:
                 type: string
+              specimen:
+                type: object
+                properties:
+                  class:
+                    type: string
+                  submitter_id:
+                    type: string
+                  specimen_type:
+                    type: string
     associated_vcfs:
       type: array
       items:
@@ -127,14 +170,24 @@ workflow:
       depends_on:
       - completed@download_files
 
+    generate_song_payloads:
+      tool: generate_song_payload
+      input:
+        input_directory: directory@download_files
+        normal_bam: normal_bam
+        tumor_bams: tumor_bams
+        experiment: experiment
+        analysis: analysis
+
+
     upload_minibams:
       tool: upload_minibams
       input:
-        input_directory: output_directory@download_files
-        donor: donor
-        experiment: experiment
+        input_directory: directory@download_files
+        payloads: payloads@generate_song_payloads
         normal_bam: normal_bam
         tumour_bams: tumour_bams
+        study_id: project_code
       depends_on:
       - completed@download_files
 
@@ -175,16 +228,31 @@ tools:
       output_directory:
         type: string
 
-  upload_minibams:
-    command: upload.py
+  generate_song_payloads:
+    command: generate_song_payloads.py
     input:
       input_directory:
         type: string
-      donor:
+      normal_bam:
         type: object
+      tumor_bams:
+        type: array
       experiment:
         type: object
+      analysis:
+        type: object
+    output:
+      payloads:
+        type: array
+
+  upload_minibams:
+    command: upload.py
+    input:
+      payloads:
+        type: array
       normal_bam:
         type: string
       tumour_bams:
         type: array
+      study_id:
+        type: string
