@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 from utils import get_task_dict, save_output_json
 
