@@ -85,7 +85,7 @@ workflow:
                   type: string
                 specimen_type:
                   type: string
-    tumour_bams:
+    tumor_bams:
       type: array
       items:
         type: object
@@ -153,7 +153,7 @@ workflow:
       tool: download_files
       input:
         normal_bam: normal_bam
-        tumour_bams: tumour_bams
+        tumor_bams: tumor_bams
         vcf_files: associated_vcfs
       depends_on: null
 
@@ -162,7 +162,7 @@ workflow:
       input:
         input_directory: directory@download_files
         normal_bam: normal_bam
-        tumour_bams: tumour_bams
+        tumor_bams: tumor_bams
         vcf_files: associated_vcfs
         sv_padding: sv_padding
         snv_padding: snv_padding
@@ -187,7 +187,7 @@ workflow:
         input_directory: directory@download_files
         payloads: payloads@generate_song_payloads
         normal_bam: normal_bam
-        tumour_bams: tumour_bams
+        tumor_bams: tumor_bams
         study_id: project_code
       depends_on:
       - completed@download_files
@@ -207,7 +207,7 @@ tools:
     input:
       normal_bam:
         type: object
-      tumour_bams:
+      tumor_bams:
         type: array
       vcf_files:
         type: array
@@ -222,7 +222,7 @@ tools:
         type: string
       normal_bam:
         type: object
-      tumour_bams:
+      tumor_bams:
         type: array
       vcf_files:
         type: array
@@ -260,7 +260,7 @@ tools:
         type: array
       normal_bam:
         type: string
-      tumour_bams:
+      tumor_bams:
         type: array
       study_id:
         type: string
