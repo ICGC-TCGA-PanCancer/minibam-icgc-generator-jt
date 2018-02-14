@@ -9,7 +9,7 @@ import time
 task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
 
-time.sleep(2*60)
+#time.sleep(2*60)
 
 def download_file(object_id, out_dir, file_name):
     docker_container = "quay.io/baminou/minibam-collab-dckr:latest"
