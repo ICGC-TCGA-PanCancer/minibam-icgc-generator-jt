@@ -33,7 +33,8 @@ def create_payload_json(bam, analysis, experiment, input_directory, output_file)
                                   md5sum=hashlib.md5(open(file_path,'rb').read()).hexdigest(),file_type='BAM',file_size=os.stat(file_path).st_size)
 
     file_path = os.path.join(input_directory,normal_bam.get('minibam').get('bai_file_name'))
-    minibai_payload = FilePayload(file_access=normal_bam.get('minibam').get('access'),file_name=normal_bam.get('minibam').get('bai_file_name'),md5sum=hashlib.md5(file_path),file_type='BAI',file_size=os.stat(file_path).st_size)
+    minibai_payload = FilePayload(file_access=normal_bam.get('minibam').get('access'),file_name=normal_bam.get('minibam').get('bai_file_name'),
+                                  md5sum=hashlib.md5(open(file_path,'rb').read()).hexdigest(),file_type='BAI',file_size=os.stat(file_path).st_size)
 
     specimen_payload = SpecimenPayload(specimen_class=bam.get('sample').get('specimen').get('specimen_class'),
                                    specimen_type=bam.get('sample').get('specimen').get('type'),
