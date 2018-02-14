@@ -16,15 +16,13 @@ import hashlib
 task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
 
-input_dir = task_dict.get('input_directory')
-normal_bam = task_dict.get('normal_bam')
-tumor_bams = task_dict.get('tumor_bams')
-experiment = task_dict.get('experiment')
-analysis = task_dict.get('analysis')
+input_directory = task_dict.get('input').get('input_directory')
+normal_bam = task_dict.get('input').get('normal_bam')
+tumor_bams = task_dict.get('input').get('tumor_bams')
+experiment = task_dict.get('input').get('experiment')
+analysis = task_dict.get('input').get('analysis')
 
-save_output_json({
-    'dir': input_dir
-})
+save_output_json(task_dict)
 
 def create_payload_json(bam, analysis, experiment, input_directory, output_file):
     donor_payload = DonorPayload(donor_gender=bam.get('donor').get('gender'),donor_submitter_id=bam.get('donor').get('submitter_id'))
@@ -53,12 +51,12 @@ def create_payload_json(bam, analysis, experiment, input_directory, output_file)
 
 payloads = []
 
-create_payload_json(normal_bam, analysis, experiment, input_dir, input_dir+'/normal_minibam.json')
-payloads.append(input_dir+'/normal_minibam.json')
+create_payload_json(normal_bam, analysis, experiment, input_directory, os.path.join(input_directory, 'normal_minibam.json'))
+payloads.append(os.path.join(input_directory, 'normal_minibam.json'))
 
 for i in range(0,len(tumor_bams)):
-    create_payload_json(tumor_bams[i],analysis, experiment, task_dict.get('input_directory'), input_dir+'/tumor_minibam_'+str(i)+'.json')
-    payloads.append(input_dir+'/tumor_minibam_'+str(i)+'.json')
+    create_payload_json(tumor_bams[i],analysis, experiment, input_directory, os.path.join(input_directory, 'tumor_minibam_'+str(i)+'.json'))
+    payloads.append(os.path.join(input_directory, 'tumor_minibam_'+str(i)+'.json'))
 
 save_output_json({
     'payloads': payloads
