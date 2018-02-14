@@ -150,7 +150,7 @@ workflow:
 
   tasks:
     download_files:
-      tool: download
+      tool: download_files
       input:
         normal_bam: normal_bam
         tumour_bams: tumour_bams
@@ -178,6 +178,8 @@ workflow:
         tumor_bams: tumor_bams
         experiment: experiment
         analysis: analysis
+      depends_on:
+      - completed@download_files
 
 
     upload_minibams:
@@ -194,7 +196,7 @@ workflow:
 # A workflow is made up with one or more tools
 # Each tool can have its own docker imagine if desirable
 tools:
-  download:  # make a new XML cancatenate original EGA XMLs: study, sample, analysis/(experiment and run)
+  download_files:  # make a new XML cancatenate original EGA XMLs: study, sample, analysis/(experiment and run)
     command: download.py
     input:
       normal_bam:
