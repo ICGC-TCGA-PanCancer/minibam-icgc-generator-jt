@@ -25,7 +25,7 @@ analysis = task_dict.get('input').get('analysis')
 save_output_json(task_dict)
 
 def create_payload_json(bam, analysis, experiment, input_directory, output_file):
-    donor_payload = DonorPayload(donor_gender=None,donor_submitter_id=None)
+    donor_payload = DonorPayload(donor_gender=bam.get('donor').get('submitter_id'),donor_submitter_id=bam.get('donor').get('submitter_id'))
     experiment_payload = ExperimentPayload(aligned=experiment.get('aligned'),library_strategy=experiment.get('library_strategy'),reference_genome=experiment.get('reference_genome'))
 
     file_path = os.path.join(input_directory,bam.get('minibam').get('bam_file_name'))
@@ -40,7 +40,7 @@ def create_payload_json(bam, analysis, experiment, input_directory, output_file)
                                    specimen_type=bam.get('sample').get('specimen').get('type'),
                                    specimen_submitter_id=bam.get('sample').get('specimen').get('submitter_id'))
 
-    sample_payload = SamplePayload(donor_payload=donor_payload, sample_submitter_id=bam.get('sample').get('submitter_id'),sample_type=bam.get('sample').get('sample_type'),
+    sample_payload = SamplePayload(donor_payload=donor_payload, sample_submitter_id=bam.get('sample').get('submitter_id'),sample_type=bam.get('sample').get('type'),
                                specimen_payload=specimen_payload)
 
     song_payload = SongPayload(analysis_id=analysis.get('id'), analysis_type=analysis.get('type'),experiment_payload=experiment_payload)
