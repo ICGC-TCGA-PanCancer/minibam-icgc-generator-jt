@@ -22,6 +22,8 @@ tumor_bams = task_dict.get('tumor_bams')
 experiment = task_dict.get('experiment')
 analysis = task_dict.get('analysis')
 
+save_output_json(task_dict)
+
 def create_payload_json(bam, analysis, experiment, input_directory, output_file):
     donor_payload = DonorPayload(donor_gender=bam.get('donor').get('gender'),donor_submitter_id=bam.get('donor').get('submitter_id'))
     experiment_payload = ExperimentPayload(aligned=experiment.get('aligned'),library_strategy=experiment.get('library_strategy'),reference_genome=experiment.get('reference_genome'))
