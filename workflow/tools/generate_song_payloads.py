@@ -30,7 +30,7 @@ def create_payload_json(bam, analysis, experiment, input_directory, output_file)
 
     file_path = os.path.join(input_directory,bam.get('minibam').get('bam_file_name'))
     minibam_payload = FilePayload(file_access=bam.get('minibam').get('access'),file_name=bam.get('minibam').get('bam_file_name'),
-                                  md5sum=hashlib.md5(open("nohup3.1.log",'rb').read()).hexdigest(),file_type='BAM',file_size=os.stat(file_path).st_size)
+                                  md5sum=hashlib.md5(open(file_path,'rb').read()).hexdigest(),file_type='BAM',file_size=os.stat(file_path).st_size)
 
     file_path = os.path.join(input_directory,normal_bam.get('minibam').get('bai_file_name'))
     minibai_payload = FilePayload(file_access=normal_bam.get('minibam').get('access'),file_name=normal_bam.get('minibam').get('bai_file_name'),md5sum=hashlib.md5(file_path),file_type='BAI',file_size=os.stat(file_path).st_size)
