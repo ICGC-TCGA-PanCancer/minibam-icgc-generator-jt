@@ -190,7 +190,7 @@ workflow:
         tumor_bams: tumor_bams
         study_id: project_code
       depends_on:
-      - completed@download_files
+      - completed@generate_song_payloads
 
     clean_directory:
       tool: clean_directory

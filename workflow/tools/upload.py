@@ -28,15 +28,7 @@ subprocess.check_output(['docker', 'pull', upload_container])
 
 for i in range(0,len(payloads)):
     subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',input_directory+':/app',upload_container,'upload','-s',study_id,
-                         '-u',song_server,'-p',payloads[i],'-o','/app/manifest.txt','-j','/app/manifest.json'])
-
-
-#shutil.move(os.path.join(input_directory,'payload.json'), os.path.join(cwd,'payload.json'))
-
-subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',cwd+':/app',upload_container,'upload','-s',study_id,
-                         '-u',song_server,'-p','payload.json','-o','/app/manifest2.txt','/app/manifest2.json'])
-
-
+                         '-u',song_server,'-p','/app/'+payloads[i],'-o','/app/manifest.txt','-j','/app/manifest.json'])
 
 #save_output_json({
 #    'payload_json': os.path.join(cwd,'payload.json')
