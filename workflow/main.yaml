@@ -179,8 +179,7 @@ workflow:
         experiment: experiment
         analysis: analysis
       depends_on:
-      - completed@download_files
-
+      - completed@generate_minibam
 
     upload_minibams:
       tool: upload_minibams
@@ -192,6 +191,13 @@ workflow:
         study_id: project_code
       depends_on:
       - completed@download_files
+
+    clean_directory:
+      tool: clean_direcoty
+      input:
+        input_directory: directory@download_files
+      depends_on:
+      - completed@upload_minibams
 
 # A workflow is made up with one or more tools
 # Each tool can have its own docker imagine if desirable
@@ -257,4 +263,10 @@ tools:
       tumour_bams:
         type: array
       study_id:
+        type: string
+
+  clean_directory:
+    command: clean_directory.py
+    input:
+      input_directory:
         type: string

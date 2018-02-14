@@ -13,9 +13,7 @@ task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
 
 
-payload_container = "quay.io/baminou/dckr_song_generate_payload"
 upload_container = "quay.io/baminou/dckr_song_upload"
-subprocess.check_output(['docker','pull',payload_container])
 
 payloads = task_dict.get('input').get('payloads')
 input_directory = task_dict.get('input').get('input_directory')
@@ -28,10 +26,10 @@ song_server = 'http://142.1.177.168:8080'
 
 subprocess.check_output(['docker', 'pull', upload_container])
 
-subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',input_directory+':/app',upload_container,'upload','-s',study_id,
-                         '-u',song_server,'-p','payload.json','-o','/app/manifest.txt','-j','/app/manifest.json'])
+for i in range(0,len(payloads)):
+    subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',input_directory+':/app',upload_container,'upload','-s',study_id,
+                         '-u',song_server,'-p',payloads[i],'-o','/app/manifest.txt','-j','/app/manifest.json'])
 
-for tumour_bam in tumour_bams:
 
 #shutil.move(os.path.join(input_directory,'payload.json'), os.path.join(cwd,'payload.json'))
 

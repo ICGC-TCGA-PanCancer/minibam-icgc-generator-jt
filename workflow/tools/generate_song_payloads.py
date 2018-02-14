@@ -52,11 +52,11 @@ def create_payload_json(bam, analysis, experiment, input_directory, output_file)
 payloads = []
 
 create_payload_json(normal_bam, analysis, experiment, input_directory, os.path.join(input_directory, 'normal_minibam.json'))
-payloads.append(os.path.join(input_directory, 'normal_minibam.json'))
+payloads.append('normal_minibam.json')
 
 for i in range(0,len(tumor_bams)):
     create_payload_json(tumor_bams[i],analysis, experiment, input_directory, os.path.join(input_directory, 'tumor_minibam_'+str(i)+'.json'))
-    payloads.append(os.path.join(input_directory, 'tumor_minibam_'+str(i)+'.json'))
+    payloads.append( 'tumor_minibam_'+str(i)+'.json')
 
 save_output_json({
     'payloads': payloads
