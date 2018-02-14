@@ -36,9 +36,9 @@ json_input['indel-padding']                     = str(task_dict.get('input').get
 json_input['tumours'] = []
 for i in range(0,len(task_dict.get('input').get('tumour_bams'))):
     tmp_json = {}
-    tmp_json['tumourId'] = task_dict.get('input').get('tumour_bams')[i].get('file_name').replace('.bam','')
-    tmp_json['bamFileName'] = task_dict.get('input').get('tumour_bams')[i].get('file_name')
-    tmp_json['oxoQScore'] = task_dict.get('input').get('tumour_bams')[i].get('oxog_score')
+    tmp_json['tumourId'] = task_dict.get('input').get('tumor_bams')[i].get('file_name').replace('.bam','')
+    tmp_json['bamFileName'] = task_dict.get('input').get('tumor_bams')[i].get('file_name')
+    tmp_json['oxoQScore'] = task_dict.get('input').get('tumor_bams')[i].get('oxog_score')
     tmp_json['associatedVcfs'] = []
     for j in range(0,len(task_dict.get('input').get('vcf_files'))):
         tmp_json['associatedVcfs'].append(task_dict.get('input').get('vcf_files')[i].get('file_name'))

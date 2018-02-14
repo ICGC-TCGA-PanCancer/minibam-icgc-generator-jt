@@ -19,7 +19,7 @@ payloads = task_dict.get('input').get('payloads')
 input_directory = task_dict.get('input').get('input_directory')
 normal_minibam_name = task_dict.get('input').get('normal_bam').get('minibam').get('bam_file_name')
 normal_minibai_name = task_dict.get('input').get('normal_bam').get('minibam').get('bai_file_name')
-tumour_bams = task_dict.get('input').get('tumour_bams')
+tumour_bams = task_dict.get('input').get('tumor_bams')
 study_id = task_dict.get('input').get('project_code')
 
 song_server = 'http://142.1.177.168:8080'
