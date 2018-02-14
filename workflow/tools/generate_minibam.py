@@ -34,7 +34,7 @@ json_input['sv-padding']                        = str(task_dict.get('input').get
 json_input['indel-padding']                     = str(task_dict.get('input').get('indel_padding'))
 
 json_input['tumours'] = []
-for i in range(0,len(task_dict.get('input').get('tumour_bams'))):
+for i in range(0,len(task_dict.get('input').get('tumor_bams'))):
     tmp_json = {}
     tmp_json['tumourId'] = task_dict.get('input').get('tumor_bams')[i].get('file_name').replace('.bam','')
     tmp_json['bamFileName'] = task_dict.get('input').get('tumor_bams')[i].get('file_name')
