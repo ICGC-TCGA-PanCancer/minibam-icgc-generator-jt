@@ -12,6 +12,8 @@ import shutil
 task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
 
+save_output_json(task_dict)
+
 
 upload_container = "quay.io/baminou/dckr_song_upload"
 
