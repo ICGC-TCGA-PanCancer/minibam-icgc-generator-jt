@@ -193,7 +193,7 @@ workflow:
       - completed@download_files
 
     clean_directory:
-      tool: clean_direcoty
+      tool: clean_directory
       input:
         input_directory: directory@download_files
       depends_on:
