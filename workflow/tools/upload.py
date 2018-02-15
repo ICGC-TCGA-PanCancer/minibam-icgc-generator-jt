@@ -19,6 +19,7 @@ def upload_file(input_directory, study_id, payload):
                              '-u', song_server, '-p', '/app/'+payload,
                              '-o','manifest.txt','-j','manifest.json',
                              '-d', '/app/'])
+    return json.load(open(os.path.join(input_directory,'manifest.json')))
 
 
 task_dict = get_task_dict(sys.argv[1])
@@ -31,9 +32,11 @@ payloads = task_dict.get('input').get('payloads')
 input_directory = task_dict.get('input').get('input_directory')
 study_id = task_dict.get('input').get('study_id')
 
-for i in range(0,len(payloads)):
-    upload_file(input_directory, study_id, payloads[i])
+manifests = []
 
-#save_output_json({
-#    'manifest_json': os.path.join(cwd,'payload.json')
-#})
+for i in range(0,len(payloads)):
+    manifests.append(upload_file(input_directory, study_id, payloads[i]))
+
+save_output_json({
+    'manifests': manifests
+})
