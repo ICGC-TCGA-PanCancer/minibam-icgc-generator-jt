@@ -32,8 +32,9 @@ for i in range(0,len(payloads)):
     subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',input_directory+':/app',upload_container,'upload','-s',study_id,
                          '-u',song_server,'-p',
                              '/app/'+payloads[i],
-                             '-o','/app/manifest.txt','-j','/app/manifest.json'])
+                             '-o','manifest.txt','-j','manifest.json',
+                             '-d',input_directory])
 
 #save_output_json({
-#    'payload_json': os.path.join(cwd,'payload.json')
+#    'manifest_json': os.path.join(cwd,'payload.json')
 #})
