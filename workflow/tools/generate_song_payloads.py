@@ -20,11 +20,10 @@ input_directory = task_dict.get('input').get('input_directory')
 normal_bam = task_dict.get('input').get('normal_bam')
 tumor_bams = task_dict.get('input').get('tumor_bams')
 experiment = task_dict.get('input').get('experiment')
-analysis = task_dict.get('input').get('analysis')
 
 save_output_json(task_dict)
 
-def create_payload_json(bam, analysis, experiment, input_directory, output_file):
+def create_payload_json(bam, experiment, input_directory, output_file):
     donor_payload = DonorPayload(donor_gender=bam.get('sample').get('donor').get('gender'),donor_submitter_id=bam.get('sample').get('donor').get('submitter_id'))
     experiment_payload = ExperimentPayload(aligned=experiment.get('aligned'),library_strategy=experiment.get('library_strategy'),reference_genome=experiment.get('reference_genome'))
 
@@ -43,7 +42,7 @@ def create_payload_json(bam, analysis, experiment, input_directory, output_file)
     sample_payload = SamplePayload(donor_payload=donor_payload, sample_submitter_id=bam.get('sample').get('submitter_id'),sample_type=bam.get('sample').get('type'),
                                specimen_payload=specimen_payload)
 
-    song_payload = SongPayload(analysis_id=analysis.get('id'), analysis_type=analysis.get('type'),experiment_payload=experiment_payload)
+    song_payload = SongPayload(analysis_id=bam.get('song_analysis_id'), analysis_type=bam.get('song_analysis_type'),experiment_payload=experiment_payload)
     song_payload.add_file_payload(minibam_payload)
     song_payload.add_file_payload(minibai_payload)
     song_payload.add_sample_payload(sample_payload)
@@ -53,11 +52,11 @@ def create_payload_json(bam, analysis, experiment, input_directory, output_file)
 
 payloads = []
 
-create_payload_json(normal_bam, analysis, experiment, input_directory, os.path.join(input_directory, 'normal_minibam.json'))
+create_payload_json(normal_bam, experiment, input_directory, os.path.join(input_directory, 'normal_minibam.json'))
 payloads.append('normal_minibam.json')
 
 for i in range(0,len(tumor_bams)):
-    create_payload_json(tumor_bams[i],analysis, experiment, input_directory, os.path.join(input_directory, 'tumor_minibam_'+str(i)+'.json'))
+    create_payload_json(tumor_bams[i], experiment, input_directory, os.path.join(input_directory, 'tumor_minibam_'+str(i)+'.json'))
     payloads.append( 'tumor_minibam_'+str(i)+'.json')
 
 save_output_json({

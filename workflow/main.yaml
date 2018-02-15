@@ -22,13 +22,6 @@ workflow:
       type: string
     sample_type:
       type: string
-    analysis:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
     study_id:
       type: string
     experiment:
@@ -177,7 +170,6 @@ workflow:
         normal_bam: normal_bam
         tumor_bams: tumor_bams
         experiment: experiment
-        analysis: analysis
       depends_on:
       - completed@generate_minibam
 
@@ -244,8 +236,6 @@ tools:
       tumor_bams:
         type: array
       experiment:
-        type: object
-      analysis:
         type: object
     output:
       payloads:
