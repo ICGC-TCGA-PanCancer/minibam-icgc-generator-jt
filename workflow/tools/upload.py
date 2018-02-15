@@ -29,7 +29,7 @@ save_output_json(task_dict)
 
 payloads = task_dict.get('input').get('payloads')
 input_directory = task_dict.get('input').get('input_directory')
-study_id = task_dict.get('input').get('project_code')
+study_id = task_dict.get('input').get('study_id')
 
 for i in range(0,len(payloads)):
     upload_file(input_directory, study_id, payloads[i])
