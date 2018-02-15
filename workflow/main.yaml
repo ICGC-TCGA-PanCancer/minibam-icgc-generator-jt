@@ -29,7 +29,7 @@ workflow:
           type: string
         type:
           type: string
-    project_code:
+    study_id:
       type: string
     experiment:
       type: object
@@ -186,9 +186,7 @@ workflow:
       input:
         input_directory: directory@download_files
         payloads: payloads@generate_song_payloads
-        normal_bam: normal_bam
-        tumor_bams: tumor_bams
-        study_id: project_code
+        study_id: study_id
       depends_on:
       - completed@generate_song_payloads
 
@@ -256,11 +254,9 @@ tools:
   upload_minibams:
     command: upload.py
     input:
-      payloads:
-        type: array
-      normal_bam:
+      input_directory:
         type: string
-      tumor_bams:
+      payloads:
         type: array
       study_id:
         type: string
