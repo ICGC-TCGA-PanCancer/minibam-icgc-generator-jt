@@ -16,7 +16,7 @@ def upload_file(input_directory, study_id, payload):
 
     subprocess.check_output(['docker','run','-e','ACCESSTOKEN',
                              '-v', input_directory+':/app',upload_container, 'upload','-s',study_id,
-                             '-u', song_server, '-p', payload,
+                             '-u', song_server, '-p', '/app/'+payload,
                              '-o','manifest.txt','-j','manifest.json',
                              '-d', '/app/'])
 
