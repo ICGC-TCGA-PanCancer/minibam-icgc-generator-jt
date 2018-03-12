@@ -41,7 +41,7 @@ for i in range(0,len(task_dict.get('input').get('tumor_bams'))):
     tmp_json['oxoQScore'] = task_dict.get('input').get('tumor_bams')[i].get('oxog_score')
     tmp_json['associatedVcfs'] = []
     for j in range(0,len(task_dict.get('input').get('vcf_files'))):
-        tmp_json['associatedVcfs'].append(task_dict.get('input').get('vcf_files')[i].get('file_name'))
+        tmp_json['associatedVcfs'].append(task_dict.get('input').get('vcf_files')[j].get('file_name'))
     json_input['tumours'].append(tmp_json)
 
 json_file = 'run.json'

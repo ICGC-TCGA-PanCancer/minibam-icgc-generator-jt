@@ -160,6 +160,7 @@ workflow:
         sv_padding: sv_padding
         snv_padding: snv_padding
         indel_padding: indel_padding
+        associated_vcfs: associated_vcfs
       depends_on:
       - completed@download_files
 
@@ -170,6 +171,9 @@ workflow:
         normal_bam: normal_bam
         tumor_bams: tumor_bams
         experiment: experiment
+        indel_padding: indel_padding
+        snv_padding: snv_padding
+        sv_padding: sv_padding
       depends_on:
       - completed@generate_minibam
 
@@ -181,6 +185,14 @@ workflow:
         study_id: study_id
       depends_on:
       - completed@generate_song_payloads
+
+    upload_to_aws:
+      tool: upload_to_aws
+      input:
+        input_directory: directory@download_files
+        payloads: payloads@generate_song_payloads
+        study_id: study_id
+
 
     clean_directory:
       tool: clean_directory
@@ -237,12 +249,30 @@ tools:
         type: array
       experiment:
         type: object
+      indel_padding:
+        type: object
+      snv_padding:
+        type: object
+      sv_padding:
+        type: object
+      associated_vcfs:
+        type: array
     output:
       payloads:
         type: array
 
   upload_minibams:
     command: upload.py
+    input:
+      input_directory:
+        type: string
+      payloads:
+        type: array
+      study_id:
+        type: string
+
+  upload_to_aws:
+    command: upload_to_aws.py
     input:
       input_directory:
         type: string

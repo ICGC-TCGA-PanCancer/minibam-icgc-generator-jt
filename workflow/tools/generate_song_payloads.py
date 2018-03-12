@@ -20,10 +20,14 @@ input_directory = task_dict.get('input').get('input_directory')
 normal_bam = task_dict.get('input').get('normal_bam')
 tumor_bams = task_dict.get('input').get('tumor_bams')
 experiment = task_dict.get('input').get('experiment')
+indel_padding = task_dict.get('input').get('indel_padding')
+snv_padding = task_dict.get('input').get('snv_padding')
+sv_padding = task_dict.get('input').get('sv_padding')
+associated_vcfs = task_dict.get('input').get('associated_vcfs')
 
 save_output_json(task_dict)
 
-def create_payload_json(bam, experiment, input_directory, output_file):
+def create_payload_json(bam, experiment, input_directory, output_file, associated_vcfs):
     donor_payload = DonorPayload(donor_gender=bam.get('sample').get('donor').get('gender'),donor_submitter_id=bam.get('sample').get('donor').get('submitter_id'))
     experiment_payload = ExperimentPayload(aligned=experiment.get('aligned'),library_strategy=experiment.get('library_strategy'),reference_genome=experiment.get('reference_genome'))
 
@@ -46,17 +50,31 @@ def create_payload_json(bam, experiment, input_directory, output_file):
     song_payload.add_file_payload(minibam_payload)
     song_payload.add_file_payload(minibai_payload)
     song_payload.add_sample_payload(sample_payload)
+
+
+    song_payload.add_info('minibam_generator',{
+        'git_url': "https://github.com/ICGC-TCGA-PanCancer/pcawg-minibam",
+        "dockstore": "https://dockstore.org/workflows/ICGC-TCGA-PanCancer/pcawg-minibam",
+        "release": "1.0.0"
+    })
+    song_payload.add_info('snv_padding', snv_padding)
+    song_payload.add_info('sv_padding', sv_padding)
     song_payload.add_info('isPcawg',True)
+    song_payload.add_info('indelPadding',indel_padding)
+    song_payload.add_info('full_size_bam', bam)
+    song_payload.add_info('vcf_files',associated_vcfs)
+
     song_payload.to_json_file(output_file)
 
 
 payloads = []
 
-create_payload_json(normal_bam, experiment, input_directory, os.path.join(input_directory, 'normal_minibam.json'))
+
+create_payload_json(normal_bam, experiment, input_directory, os.path.join(input_directory, 'normal_minibam.json'), associated_vcfs)
 payloads.append('normal_minibam.json')
 
 for i in range(0,len(tumor_bams)):
-    create_payload_json(tumor_bams[i], experiment, input_directory, os.path.join(input_directory, 'tumor_minibam_'+str(i)+'.json'))
+    create_payload_json(tumor_bams[i], experiment, input_directory, os.path.join(input_directory, 'tumor_minibam_'+str(i)+'.json'), associated_vcfs)
     payloads.append( 'tumor_minibam_'+str(i)+'.json')
 
 save_output_json({
