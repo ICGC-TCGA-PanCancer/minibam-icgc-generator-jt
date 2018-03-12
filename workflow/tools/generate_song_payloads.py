@@ -18,7 +18,7 @@ cwd = os.getcwd()
 
 input_directory = task_dict.get('input').get('input_directory')
 normal_bam = task_dict.get('input').get('normal_bam')
-tumor_bams = task_dict.get('input').get('tumor_bams')
+tumor_bams = task_dict.get('input').get('tumour_bams')
 experiment = task_dict.get('input').get('experiment')
 indel_padding = task_dict.get('input').get('indel_padding')
 snv_padding = task_dict.get('input').get('snv_padding')
