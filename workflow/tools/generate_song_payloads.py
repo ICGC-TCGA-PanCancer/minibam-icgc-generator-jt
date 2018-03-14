@@ -18,7 +18,7 @@ cwd = os.getcwd()
 
 input_directory = task_dict.get('input').get('input_directory')
 normal_bam = task_dict.get('input').get('normal_bam')
-tumor_bams = task_dict.get('input').get('tumour_bams')
+tumour_bams = task_dict.get('input').get('tumour_bams')
 experiment = task_dict.get('input').get('experiment')
 indel_padding = task_dict.get('input').get('indel_padding')
 snv_padding = task_dict.get('input').get('snv_padding')
@@ -73,9 +73,9 @@ payloads = []
 create_payload_json(normal_bam, experiment, input_directory, os.path.join(input_directory, 'normal_minibam.json'), associated_vcfs)
 payloads.append('normal_minibam.json')
 
-for i in range(0,len(tumor_bams)):
-    create_payload_json(tumor_bams[i], experiment, input_directory, os.path.join(input_directory, 'tumor_minibam_'+str(i)+'.json'), associated_vcfs)
-    payloads.append( 'tumor_minibam_'+str(i)+'.json')
+for i in range(0,len(tumour_bams)):
+    create_payload_json(tumour_bams[i], experiment, input_directory, os.path.join(input_directory, 'tumour_minibam_'+str(i)+'.json'), associated_vcfs)
+    payloads.append( 'tumour_minibam_'+str(i)+'.json')
 
 save_output_json({
     'payloads': payloads

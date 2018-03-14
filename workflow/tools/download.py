@@ -26,7 +26,7 @@ object_id = task_dict.get('input').get('normal_bam').get('object_id')
 file_name = task_dict.get('input').get('normal_bam').get('file_name')
 download_file(object_id, cwd, file_name)
 
-# Download tumor bam files
+# Download tumour bam files
 for i in range(0,len(task_dict.get('input').get('tumour_bams'))):
     object_id = task_dict.get('input').get('tumour_bams')[i].get('object_id')
     file_name = task_dict.get('input').get('tumour_bams')[i].get('file_name')
