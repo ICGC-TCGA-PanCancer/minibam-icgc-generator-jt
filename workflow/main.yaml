@@ -138,6 +138,8 @@ workflow:
             type: string
           file_size:
             type: integer
+          is_smufin:
+            type: string
 
   output: null  # we may not need this, does the workflow as a whole need some sort of output? or output from individual tasks is just fine
 

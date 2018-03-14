@@ -4,6 +4,7 @@ import subprocess
 import os
 from utils import get_task_dict, save_output_json
 import sys
+from shutil import copyfile
 
 task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
@@ -34,9 +35,12 @@ for i in range(0,len(task_dict.get('input').get('tumour_bams'))):
 
 # Download VCF files
 for i in range(0,len(task_dict.get('input').get('vcf_files'))):
-    object_id = task_dict.get('input').get('vcf_files')[i].get('object_id')
-    file_name = task_dict.get('input').get('vcf_files')[i].get('file_name')
-    download_file(object_id, cwd, file_name)
+    if not task_dict.get('input').get('vcf_files')[i].get('is_smufin'):
+        object_id = task_dict.get('input').get('vcf_files')[i].get('object_id')
+        file_name = task_dict.get('input').get('vcf_files')[i].get('file_name')
+        download_file(object_id, cwd, file_name)
+    else:
+        copyfile(os.path.join('/icgc_smufin_calls',file_name),os.path.join(cwd,file_name))
 
 save_output_json({
     'directory': cwd
