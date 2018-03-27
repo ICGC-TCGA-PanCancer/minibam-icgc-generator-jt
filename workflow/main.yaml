@@ -194,6 +194,8 @@ workflow:
         input_directory: output_directory@generate_minibam
         payloads: payloads@generate_song_payloads
         study_id: study_id
+      depends_on:
+      - completed@generate_song_payloads
 
     qc_from_collab:
       tool: qc_from_collab
