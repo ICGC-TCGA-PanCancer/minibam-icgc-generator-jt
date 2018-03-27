@@ -10,12 +10,16 @@ task_dict = get_task_dict(sys.argv[1])
 cwd = os.getcwd()
 
 def download_file(object_id, out_dir, file_name):
-    docker_container = "quay.io/baminou/minibam-collab-dckr:latest"
+    docker_container = "icgc/icgc-storage-client"
     download_source = "collab"
 
     subprocess.check_output(['docker', 'pull', docker_container])
 
-    subprocess.check_output(['docker','run','-e','ACCESSTOKEN','-v',out_dir+':/app',docker_container,'icgc-storage-client','--profile',download_source,'download',
+    subprocess.check_output(['docker','run',
+                             '--net=host',
+                             '-e','ACCESSTOKEN',
+                             '-v',out_dir+':/app',docker_container,
+                             'bin/icgc-storage-client','--profile',download_source,'download',
                              '--object-id',object_id,'--output-dir','/app','--force'])
 
     if not os.path.isfile(os.path.join(out_dir,file_name)):

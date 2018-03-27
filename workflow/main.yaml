@@ -169,7 +169,7 @@ workflow:
     generate_song_payloads:
       tool: generate_song_payloads
       input:
-        input_directory: directory@download_files
+        input_directory: directory@generate_minibam
         normal_bam: normal_bam
         tumour_bams: tumour_bams
         experiment: experiment
@@ -195,13 +195,41 @@ workflow:
         payloads: payloads@generate_song_payloads
         study_id: study_id
 
-
-    clean_directory:
-      tool: clean_directory
+    qc_from_collab:
+      tool: qc_from_collab
       input:
-        input_directory: directory@download_files
+        manifests: manifests@upload_minibams
       depends_on:
       - completed@upload_minibams
+
+    qc_from_aws:
+      tool: qc_from_aws
+      input:
+        manifests: manifests@upload_to_aws
+      depends_on:
+      - completed@upload_to_aws
+
+    delete_download_directory:
+      tool: delete_directory
+      input:
+        input_dir: directory@download_files
+      depends_on:
+      - completed@qc_from_collab
+      - completed@qc_from_aws
+
+    delete_qc_collab_directory:
+      tool: delete_directory
+      input:
+        input_dir: out_dir@qc_from_collab
+      depends_on:
+      - completed@qc_from_collab
+
+    delete_qc_aws_directory:
+      tool: delete_directory
+      input:
+        input_dir: out_dir@qc_from_aws
+      depends_on:
+      - completed@qc_from_aws
 
 # A workflow is made up with one or more tools
 # Each tool can have its own docker imagine if desirable
@@ -272,6 +300,9 @@ tools:
         type: array
       study_id:
         type: string
+    output:
+      manifests:
+        type: array
 
   upload_to_aws:
     command: upload_to_aws.py
@@ -282,9 +313,30 @@ tools:
         type: array
       study_id:
         type: string
+    output:
+      manifests:
+        type: array
 
-  clean_directory:
-    command: clean_directory.py
+  qc_from_collab:
+    command: qc_from_collab.py
     input:
-      input_directory:
+      manifests:
+        type: array
+    output:
+      out_dir:
+        type: string
+
+  qc_from_aws:
+    command: qc_from_aws.py
+    input:
+      manifests:
+        type: array
+    output:
+      out_dir:
+        type: string
+
+  delete_directory:
+    command: delete_directory.py
+    input:
+      input_dir:
         type: string

@@ -35,8 +35,8 @@ def create_payload_json(bam, experiment, input_directory, output_file, associate
     minibam_payload = FilePayload(file_access=bam.get('minibam').get('access'),file_name=bam.get('minibam').get('bam_file_name'),
                                   md5sum=hashlib.md5(open(file_path,'rb').read()).hexdigest(),file_type='BAM',file_size=os.stat(file_path).st_size)
 
-    file_path = os.path.join(input_directory,normal_bam.get('minibam').get('bai_file_name'))
-    minibai_payload = FilePayload(file_access=normal_bam.get('minibam').get('access'),file_name=normal_bam.get('minibam').get('bai_file_name'),
+    file_path = os.path.join(input_directory,bam.get('minibam').get('bai_file_name'))
+    minibai_payload = FilePayload(file_access=bam.get('minibam').get('access'),file_name=bam.get('minibam').get('bai_file_name'),
                                   md5sum=hashlib.md5(open(file_path,'rb').read()).hexdigest(),file_type='BAI',file_size=os.stat(file_path).st_size)
 
     specimen_payload = SpecimenPayload(specimen_class=bam.get('sample').get('specimen').get('class'),
@@ -46,7 +46,7 @@ def create_payload_json(bam, experiment, input_directory, output_file, associate
     sample_payload = SamplePayload(donor_payload=donor_payload, sample_submitter_id=bam.get('sample').get('submitter_id'),sample_type=bam.get('sample').get('type'),
                                specimen_payload=specimen_payload)
 
-    song_payload = SongPayload(analysis_id=bam.get('song_analysis_id'), analysis_type=bam.get('song_analysis_type'),experiment_payload=experiment_payload)
+    song_payload = SongPayload(analysis_id=bam.get('song_analysis_id'), analysis_type=bam.get('song_analysis_type'),experiment_payload=experiment_payload, sample_payloads=[], file_payloads=[], info={})
     song_payload.add_file_payload(minibam_payload)
     song_payload.add_file_payload(minibai_payload)
     song_payload.add_sample_payload(sample_payload)
@@ -61,7 +61,10 @@ def create_payload_json(bam, experiment, input_directory, output_file, associate
     song_payload.add_info('sv_padding', sv_padding)
     song_payload.add_info('isPcawg',True)
     song_payload.add_info('indelPadding',indel_padding)
-    song_payload.add_info('full_size_bam', bam)
+
+
+    song_payload.add_info('full_size_bam', {key:bam[key] for key in ['aliquot_id','file_md5sum','file_name','file_size',
+                                                                     'object_id','oxog_score','song_analysis_id']})
     song_payload.add_info('vcf_files',associated_vcfs)
 
     song_payload.to_json_file(output_file)
