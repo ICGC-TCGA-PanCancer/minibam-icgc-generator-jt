@@ -176,6 +176,7 @@ workflow:
         indel_padding: indel_padding
         snv_padding: snv_padding
         sv_padding: sv_padding
+        associated_vcfs: associated_vcfs
       depends_on:
       - completed@generate_minibam
 
