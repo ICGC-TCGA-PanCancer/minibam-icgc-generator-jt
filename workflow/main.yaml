@@ -169,7 +169,7 @@ workflow:
     generate_song_payloads:
       tool: generate_song_payloads
       input:
-        input_directory: directory@generate_minibam
+        input_directory: output_directory@generate_minibam
         normal_bam: normal_bam
         tumour_bams: tumour_bams
         experiment: experiment
@@ -182,7 +182,7 @@ workflow:
     upload_minibams:
       tool: upload_minibams
       input:
-        input_directory: directory@download_files
+        input_directory: output_directory@generate_minibam
         payloads: payloads@generate_song_payloads
         study_id: study_id
       depends_on:
@@ -191,7 +191,7 @@ workflow:
     upload_to_aws:
       tool: upload_to_aws
       input:
-        input_directory: directory@download_files
+        input_directory: output_directory@generate_minibam
         payloads: payloads@generate_song_payloads
         study_id: study_id
 
@@ -213,6 +213,14 @@ workflow:
       tool: delete_directory
       input:
         input_dir: directory@download_files
+      depends_on:
+      - completed@qc_from_collab
+      - completed@qc_from_aws
+
+    delete_minibam_directory:
+      tool: delete_directory
+      input:
+        input_dir: output_directory@generate_minibam
       depends_on:
       - completed@qc_from_collab
       - completed@qc_from_aws
