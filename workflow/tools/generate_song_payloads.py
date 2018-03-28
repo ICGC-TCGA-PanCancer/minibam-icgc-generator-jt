@@ -64,7 +64,7 @@ def create_payload_json(bam, experiment, input_directory, output_file, associate
 
 
     song_payload.add_info('full_size_bam', {key:bam[key] for key in ['aliquot_id','file_md5sum','file_name','file_size','object_id']})
-    song_payload.add_info('vcf_files',associated_vcfs)
+    song_payload.add_info('input_vcf_files',associated_vcfs)
 
     song_payload.to_json_file(output_file)
 
