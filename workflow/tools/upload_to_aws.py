@@ -20,7 +20,7 @@ subprocess.check_output(['docker','pull','mesosphere/aws-cli'])
 
 def upload_file(input_directory, study_id, payload):
     upload_container = "quay.io/baminou/dckr_song_upload"
-    song_server = 'http://142.1.177.168:8080'
+    song_server = os.environ.get('STORAGEURL_AWS')
 
     subprocess.check_output(['docker', 'pull', upload_container])
 
@@ -31,7 +31,7 @@ def upload_file(input_directory, study_id, payload):
                              '-e', 'METADATAURL=' + os.environ.get('METADATAURL_AWS'),
                              '-v', input_directory + ':/app', upload_container,
                              'upload', '-s', study_id,
-                             '-u', song_server, '-p', '/app/' + payload,
+                             '-u', os.environ.get('METADATAURL_AWS'), '-p', '/app/' + payload,
                              '-o', 'manifest.txt', '-j', 'manifest.json',
                              '-d', '/app/'])
 
