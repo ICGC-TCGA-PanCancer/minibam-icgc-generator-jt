@@ -50,8 +50,9 @@ run = study_id in allowed_codes
 
 manifests = []
 
-for i in range(0,len(payloads)):
-    manifests.append(upload_file(input_directory, study_id, payloads[i]))
+if study_id in allowed_codes:
+    for i in range(0,len(payloads)):
+        manifests.append(upload_file(input_directory, study_id, payloads[i]))
 
 save_output_json({
     'manifests': manifests
