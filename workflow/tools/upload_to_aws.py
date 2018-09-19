@@ -46,7 +46,6 @@ input_directory = task_dict.get('input').get('input_directory')
 study_id = task_dict.get('input').get('study_id')
 
 task_start = int(time.time())
-run = study_id in allowed_codes
 
 manifests = []
 
