@@ -25,7 +25,7 @@ if run:
 
     try:
         for manifest in manifests:
-            download_container = "quay.io/baminou/dckr_icgc_download"
+            download_container = "quay.io/baminou/dckr_icgc_download:1.0"
             subprocess.check_output(['docker', 'pull', download_container])
 
             for file in manifest.get('files'):
@@ -35,8 +35,8 @@ if run:
                                          '-e', 'STORAGEURL=' + os.environ.get('STORAGEURL_AWS'),
                                          '-e', 'METADATAURL=' + os.environ.get('METADATAURL_AWS'),
                                          '-v', os.getcwd() + ':/app',
-                                         download_container,
-                                         '-id', file.get('object_id'), '-o', '/app'])
+                                         download_container,'download',
+                                         '-id', file.get('object_id'), '-o', '/app','--skip-validate'])
 
                 if not os.path.isfile(os.path.join(cwd, os.path.basename(file.get('file_name')))):
                     task_info = "Error: File " + file.get('object_id') + ":" + os.path.basename(
